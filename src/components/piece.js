@@ -3,6 +3,7 @@ export class Piece{
     {
         // {x: 0, y: 0}
         this.pos = start_pos;
+        this.buffer_pos = {x:0,y:0};
         this.dragging_pos = start_pos;
         this.posibilities = [];
         this.color = color;
@@ -11,17 +12,6 @@ export class Piece{
 
         this.factor = this.color == "w" ? -1 : 1;
     }
-
-
-    __draw(context, piecesize, image)
-    {
-        if(!this.dragging) {
-            context.drawImage(image, piecesize*this.pos.x+10, piecesize*this.pos.y+10, piecesize-20, piecesize-20);
-
-        } else {
-            context.drawImage(image, this.dragging_pos.x-piecesize/2, this.dragging_pos.y-piecesize/2, piecesize, piecesize)
-        }
-    }
 }
 export class Pawn extends Piece
 {
@@ -29,39 +19,34 @@ export class Pawn extends Piece
     {
         super(start_pos, color);
         this.image = new Image(50, 50);
-        this.image.src = "media/pawn_"+this.color+".png";
+        this.image.src = require("./media/pawn_w.png");
     }
 
     
     draw(context, piecesize)
     {
-        this.__draw(context, piecesize, this.image)
+        context.drawImage(this.image, this.pos.x, this.pos.y, piecesize, piecesize);
     }
 
 
-    AllowedMoves(board)
+    AllowedMoves(board, pieceSize)
     {
         this.posibilities = [];
 
-        if(this.pos.y < 7 && this.pos.y > 0) {
-            if(!this.has_moved && board[this.pos.y+(this.factor*2)][this.pos.x] == 0 && board[this.pos.y+(this.factor*2)][this.pos.x] == 0) {
-                this.posibilities.push({x: this.pos.x, y: this.pos.y+(this.factor*1)})
-                this.posibilities.push({x: this.pos.x, y: this.pos.y+(this.factor*2)})
+        if(this.color == 'w'){
+            if(Math.floor(this.pos.y/pieceSize) === 6 && board[Math.floor(this.pos.y/pieceSize)-2][Math.floor(this.pos.x/pieceSize)] == 0){
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-1})
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-2})
+            } else{
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-1})
             }
-            else if(board[this.pos.y+(this.factor*1)][this.pos.x] == 0) {
-                this.posibilities.push({x: this.pos.x, y: this.pos.y+(this.factor*1)})
-            }
-            if(this.pos.x < 7) {
-                let a = board[this.pos.y+(this.factor*1)][this.pos.x+1];
-                if(a != 0 && a.color != this.color) {
-                    this.posibilities.push({x: this.pos.x+1, y: this.pos.y+(this.factor*1)})
-                }
-            }
-            if(this.pos.x > 0) {
-                let a = board[this.pos.y+(this.factor*1)][this.pos.x-1];
-                if(a != 0 && a.color != this.color) {
-                    this.posibilities.push({x: this.pos.x-1, y: this.pos.y+(this.factor*1)})
-                }
+        }
+        if(this.color == 'b'){
+            if(Math.floor(this.pos.y/pieceSize) === 6 && board[Math.floor(this.pos.y/pieceSize)-2][Math.floor(this.pos.x/pieceSize)] == 0){
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1})
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+2})
+            } else{
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1})
             }
         }
     }
