@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Pawn} from './components/piece'
+import {Pawn, Bishop, Knight, Queen, King, Rook} from './components/piece'
 import './App.css'
 
 class App extends Component {
@@ -21,7 +21,8 @@ class App extends Component {
                 [0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0],
             ],
-            selectedPiece: 0
+            selectedPiece: 0,
+            holdPiece: 0
         };
         this.renderBoard = this.renderBoard.bind(this);
         this.drawPieces = this.drawPieces.bind(this);
@@ -29,11 +30,60 @@ class App extends Component {
 
     componentDidMount() {
         const canvas = this.canvasRef;
+        //white
         let board = this.state.board
         for(let x = 0;x<8;x++){
-            let piece1 = new Pawn({x:x*this.state.pieceSize, y: 1*this.state.pieceSize}, 'w')
+            let piece1 = new Pawn({x:x*this.state.pieceSize, y: 6*this.state.pieceSize}, 'w')
+            board[6][x] = piece1
+        }
+        let bishop1 = new Bishop({x: 2*this.state.pieceSize, y: 7*this.state.pieceSize}, 'w')
+        board[7][2] = bishop1
+        let bishop2 = new Bishop({x: 5*this.state.pieceSize, y: 7*this.state.pieceSize}, 'w')
+        board[7][5] = bishop2
+
+        let queen1 = new Queen({x: 3*this.state.pieceSize, y: 7*this.state.pieceSize}, 'w')
+        board[7][3] = queen1
+
+        let king1 = new King({x: 4*this.state.pieceSize, y: 7*this.state.pieceSize}, 'w')
+        board[7][4] = king1
+
+        let rook1 = new Rook({x: 7*this.state.pieceSize, y: 7*this.state.pieceSize}, 'w')
+        board[7][7] = rook1
+        let rook2 = new Rook({x: 0*this.state.pieceSize, y: 7*this.state.pieceSize}, 'w')
+        board[7][0] = rook2
+
+        let knight1 = new Knight({x: 1*this.state.pieceSize, y: 7*this.state.pieceSize}, 'w')
+        board[7][1] = knight1
+        let knight2 = new Knight({x: 6*this.state.pieceSize, y: 7*this.state.pieceSize}, 'w')
+        board[7][6] = knight2
+
+
+
+        //black
+        for(let x = 0;x<8;x++){
+            let piece1 = new Pawn({x:x*this.state.pieceSize, y: 1*this.state.pieceSize}, 'b')
             board[1][x] = piece1
         }
+        let bishop11 = new Bishop({x: 2*this.state.pieceSize, y: 0*this.state.pieceSize}, 'b')
+        board[0][2] = bishop11
+        let bishop22 = new Bishop({x: 5*this.state.pieceSize, y: 0*this.state.pieceSize}, 'b')
+        board[0][5] = bishop22
+
+        let queen11 = new Queen({x: 3*this.state.pieceSize, y: 0*this.state.pieceSize}, 'b')
+        board[0][3] = queen11
+
+        let king11 = new King({x: 4*this.state.pieceSize, y: 0*this.state.pieceSize}, 'b')
+        board[0][4] = king11
+
+        let rook11 = new Rook({x: 7*this.state.pieceSize, y: 0*this.state.pieceSize}, 'b')
+        board[0][7] = rook11
+        let rook22 = new Rook({x: 0*this.state.pieceSize, y: 0*this.state.pieceSize}, 'b')
+        board[0][0] = rook22
+
+        let knight11 = new Knight({x: 1*this.state.pieceSize, y: 0*this.state.pieceSize}, 'b')
+        board[0][1] = knight11
+        let knight22 = new Knight({x: 6*this.state.pieceSize, y: 0*this.state.pieceSize}, 'b')
+        board[0][6] = knight22
         
         this.setState({board:board})
         this.animationFrame = requestAnimationFrame(this.updateAnimation);
@@ -80,10 +130,11 @@ class App extends Component {
             this.state.selectedPiece.pos = {x: Math.floor(this.state.mouseX/this.state.pieceSize)*this.state.pieceSize, y: Math.floor(this.state.mouseY/this.state.pieceSize)*this.state.pieceSize}
 
             let board = this.state.board
-            
-            if(Math.floor(this.state.mouseX/this.state.pieceSize)=== this.state.selectedPiece.buffer_pos.x && Math.floor(this.state.mouseY/this.state.pieceSize) === this.state.pieceSize.y){
-                
+            console.log(Math.floor(this.state.mouseX/this.state.pieceSize), this.state.selectedPiece.buffer_pos.x, Math.floor(this.state.mouseY/this.state.pieceSize), this.state.pieceSize)
+            if(Math.floor(this.state.mouseX/this.state.pieceSize)=== this.state.selectedPiece.buffer_pos.x && Math.floor(this.state.mouseY/this.state.pieceSize) === this.state.selectedPiece.buffer_pos.y){
+                console.log("hei")
            } else{
+            console.log("hei")
                 board[Math.floor(this.state.mouseY/this.state.pieceSize)][Math.floor(this.state.mouseX/this.state.pieceSize)] = this.state.selectedPiece
                 board[this.state.selectedPiece.buffer_pos.y][this.state.selectedPiece.buffer_pos.x] = 0
            }
@@ -136,6 +187,11 @@ class App extends Component {
             this.state.selectedPiece.pos = {x: this.state.mouseX-(this.state.pieceSize/2), y: this.state.mouseY-(this.state.pieceSize/2)};
         }
     }
+    drawMoves(ctx){
+        if(this.state.holdPiece !== 0){
+            
+        }
+    }
     updateAnimation = () => {
         const canvas = this.canvasRef;
         const ctx = canvas.getContext('2d');
@@ -147,14 +203,12 @@ class App extends Component {
 
     render() {
     return (
-        <div>
         <canvas
             ref={(canvas) => { this.canvasRef = canvas; }}
             width={600}
             height={600}
             style={{ border: '1px solid #000000' }}
         />
-        </div>
     );
     }
     }
