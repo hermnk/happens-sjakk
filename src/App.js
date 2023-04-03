@@ -26,6 +26,7 @@ class App extends Component {
         };
         this.renderBoard = this.renderBoard.bind(this);
         this.drawPieces = this.drawPieces.bind(this);
+        this.drawMoves = this.drawMoves.bind(this);
     }
 
     componentDidMount() {
@@ -109,12 +110,13 @@ class App extends Component {
         });
     }
     handleMouseDown = (event) => {
-        let newPiece =this.state.board[Math.floor(this.state.mouseY/this.state.pieceSize)][Math.floor(this.state.mouseX/this.state.pieceSize)]
+        let newPiece = this.state.board[Math.floor(this.state.mouseY/this.state.pieceSize)][Math.floor(this.state.mouseX/this.state.pieceSize)]
         this.setState({
             mouseDown: true,
             selectedPiece: newPiece
         }, () =>{
                 if(this.state.board[Math.floor(this.state.mouseY/this.state.pieceSize)][Math.floor(this.state.mouseX/this.state.pieceSize)] !== 0){
+                    newPiece.AllowedMoves(this.state.board, this.state.pieceSize);
                     this.state.board[Math.floor(this.state.mouseY/this.state.pieceSize)][Math.floor(this.state.mouseX/this.state.pieceSize)].buffer_pos = {x: Math.floor(this.state.mouseX/this.state.pieceSize), y: Math.floor(this.state.mouseY/this.state.pieceSize)}
                 }
             
@@ -122,32 +124,37 @@ class App extends Component {
 
     }
     handleMouseUp = (event) =>{
-        console.log(this.state.selectedPiece)
         this.setState({
             mouseDown: false
         })
         if(this.state.selectedPiece !== 0){
-            this.state.selectedPiece.pos = {x: Math.floor(this.state.mouseX/this.state.pieceSize)*this.state.pieceSize, y: Math.floor(this.state.mouseY/this.state.pieceSize)*this.state.pieceSize}
+            let check = this.state.selectedPiece.posibilities.find( item => item.x === Math.floor(this.state.mouseX/this.state.pieceSize) && item.y === Math.floor(this.state.mouseY/this.state.pieceSize))
 
-            let board = this.state.board
-            console.log(Math.floor(this.state.mouseX/this.state.pieceSize), this.state.selectedPiece.buffer_pos.x, Math.floor(this.state.mouseY/this.state.pieceSize), this.state.pieceSize)
-            if(Math.floor(this.state.mouseX/this.state.pieceSize)=== this.state.selectedPiece.buffer_pos.x && Math.floor(this.state.mouseY/this.state.pieceSize) === this.state.selectedPiece.buffer_pos.y){
-                console.log("hei")
-           } else{
-            console.log("hei")
-                board[Math.floor(this.state.mouseY/this.state.pieceSize)][Math.floor(this.state.mouseX/this.state.pieceSize)] = this.state.selectedPiece
-                board[this.state.selectedPiece.buffer_pos.y][this.state.selectedPiece.buffer_pos.x] = 0
-           }
-           
-           
-           
-            this.setState({
-                board:board,
-                selectedPiece:0 
-            }, ()=>{
-                console.log(board)
-            })
+            if(check){
+                this.state.selectedPiece.pos = {x: Math.floor(this.state.mouseX/this.state.pieceSize)*this.state.pieceSize, y: Math.floor(this.state.mouseY/this.state.pieceSize)*this.state.pieceSize}
+
+                let board = this.state.board
+                if(Math.floor(this.state.mouseX/this.state.pieceSize)=== this.state.selectedPiece.buffer_pos.x && Math.floor(this.state.mouseY/this.state.pieceSize) === this.state.selectedPiece.buffer_pos.y){
+                } else{
+                    board[Math.floor(this.state.mouseY/this.state.pieceSize)][Math.floor(this.state.mouseX/this.state.pieceSize)] = this.state.selectedPiece
+                    board[this.state.selectedPiece.buffer_pos.y][this.state.selectedPiece.buffer_pos.x] = 0
+                }
             
+            
+            
+                this.setState({
+                    board:board,
+                    selectedPiece:0 
+                }, ()=>{
+                })
+            }
+            else{
+                this.state.selectedPiece.pos = {x: this.state.selectedPiece.buffer_pos.x*this.state.pieceSize, y: this.state.selectedPiece.buffer_pos.y*this.state.pieceSize}
+                this.setState({
+                    selectedPiece:0 
+                }, ()=>{
+                })
+            }
         }
     }
     renderBoard(ctx){
@@ -188,7 +195,22 @@ class App extends Component {
         }
     }
     drawMoves(ctx){
-        if(this.state.holdPiece !== 0){
+        if(this.state.selectedPiece !== 0){
+            for(let i = 0;i<this.state.selectedPiece.posibilities.length;i++){
+                console.log(this.state.selectedPiece.posibilities)
+                if(this.state.selectedPiece.posibilities[i].onPiece === true){
+                    ctx.beginPath();
+                    ctx.lineWidth = 5;
+                    ctx.arc(this.state.selectedPiece.posibilities[i].x*this.state.pieceSize+this.state.pieceSize/2, this.state.selectedPiece.posibilities[i].y*this.state.pieceSize+this.state.pieceSize/2, 25, 0, 2 * Math.PI);
+                    ctx.fillStyle =  "rgba(255, 0, 0, 0.5)";
+                    ctx.fill();
+                } else{
+                    ctx.beginPath();
+                    ctx.arc(this.state.selectedPiece.posibilities[i].x*this.state.pieceSize+this.state.pieceSize/2, this.state.selectedPiece.posibilities[i].y*this.state.pieceSize+this.state.pieceSize/2, 15, 0, Math.PI*2);
+                    ctx.fillStyle =  "rgba(0, 0, 0, 0.5)";
+                    ctx.fill();
+                }
+            }
             
         }
     }
@@ -197,6 +219,7 @@ class App extends Component {
         const ctx = canvas.getContext('2d');
         this.renderBoard(ctx)
         this.drawPieces(ctx);
+        this.drawMoves(ctx);
 
         this.animationFrame = requestAnimationFrame(this.updateAnimation);
     }

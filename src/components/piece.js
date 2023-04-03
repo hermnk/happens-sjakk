@@ -4,7 +4,6 @@ export class Piece{
         // {x: 0, y: 0}
         this.pos = start_pos;
         this.buffer_pos = {x:0,y:0};
-        this.dragging_pos = start_pos;
         this.posibilities = [];
         this.color = color;
         this.dragging = false;
@@ -35,18 +34,18 @@ export class Pawn extends Piece
 
         if(this.color == 'w'){
             if(Math.floor(this.pos.y/pieceSize) === 6 && board[Math.floor(this.pos.y/pieceSize)-2][Math.floor(this.pos.x/pieceSize)] == 0){
-                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-1})
-                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-2})
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-1, onPiece: false})
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-2, onPiece: false})
             } else{
                 this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-1})
             }
         }
         if(this.color == 'b'){
-            if(Math.floor(this.pos.y/pieceSize) === 6 && board[Math.floor(this.pos.y/pieceSize)-2][Math.floor(this.pos.x/pieceSize)] == 0){
-                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1})
-                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+2})
+            if(Math.floor(this.pos.y/pieceSize) === 1 && board[Math.floor(this.pos.y/pieceSize)+2][Math.floor(this.pos.x/pieceSize)] == 0){
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1, onPiece: false})
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+2, onPiece: false})
             } else{
-                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1})
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1, onPiece: false})
             }
         }
     }
@@ -73,9 +72,15 @@ export class Knight extends Piece
         this.posibilities = [];
 
         for(let x = 0;x<this.legal_pos.length;x++){
-            if(0 <= Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1] <= 7 && 0 <= Math.floor((this.pos.x/pieceSize))+this.legal_pos[x][0] <= 7){
-                if(board[Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1]][Math.floor((this.pos.x/pieceSize))+this.legal_pos[x][0]] == 0){
-                    this.pos_list.push({x:(Math.floor(this.pos.x/pieceSize)+this.legal_pos[x][0]), y:(Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1])})
+            if(0 <= Math.floor(this.pos.y/pieceSize)+1*this.legal_pos[x][1] && Math.floor(this.pos.y/pieceSize)+1*this.legal_pos[x][1] <= 7 && 0 <= Math.floor((this.pos.x/pieceSize))+1*this.legal_pos[x][0] && Math.floor((this.pos.x/pieceSize))+1*this.legal_pos[x][0] <= 7){
+                if(board[Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1]][Math.floor((this.pos.x/pieceSize))+this.legal_pos[x][0]] === 0){
+                    this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.legal_pos[x][0]), y:(Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1]), onPiece: false})
+                } else if(board[Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1]][Math.floor((this.pos.x/pieceSize))+this.legal_pos[x][0]].color === 'w' || board[Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1]][Math.floor((this.pos.x/pieceSize))+this.legal_pos[x][0]].color === 'b'){
+                            
+                    if(board[Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1]][Math.floor((this.pos.x/pieceSize))+this.legal_pos[x][0]].color === this.color){
+                    } else{
+                        this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.legal_pos[x][0]), y:(Math.floor(this.pos.y/pieceSize)+this.legal_pos[x][1]), onPiece: true})
+                    }
                 }
             }
         }
@@ -101,7 +106,7 @@ export class Bishop extends Piece
     }
 
 
-    AllowedMoves(board)
+    AllowedMoves(board, pieceSize)
     {
         this.posibilities = [];
         this.legal_pos = [{x:-1,y:1, stopped: false},{x:-1,y:-1, stopped: false},{x:1,y:1, stopped: false},{x:1,y:-1, stopped: false}]
@@ -116,11 +121,18 @@ export class Bishop extends Piece
                 if(this.legal_pos[x].stopped === false){
                     
                     if(0 <= Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y &&  Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y <= 7 && 0 <= Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x &&Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x <= 7){
-                        console.log("hei")
                         if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x] === 0){
-                            this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y)})
-                        } else{
+                            this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y), onPiece: false})
+                        } else if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === 'w' || board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === 'b'){
                             
+                            if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === this.color){
+                            } else{
+                                this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y), onPiece: true})
+                            }
+                            this.legal_pos[x].stopped = true
+                            this.count += 1
+                        } else{
+
                             this.legal_pos[x].stopped = true
                             this.count += 1
                         }
@@ -155,7 +167,7 @@ export class Queen extends Piece
     }
 
 
-    AllowedMoves(board)
+    AllowedMoves(board, pieceSize)
     {
         this.posibilities = [];
         this.legal_pos = [{x:-1,y:1,stopped: false},{x:-1,y:-1, stopped: false},{x:1,y:1, stopped: false},{x:1,y:-1, stopped: false}, {x:1,y:0,stopped: false}, {x:0,y:1,stopped: false},{x:-1,y:0,stopped: false},{x:0,y:-1,stopped: false}]
@@ -170,10 +182,18 @@ export class Queen extends Piece
                 if(this.legal_pos[x].stopped === false){
                     
                     if(0 <= Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y &&  Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y <= 7 && 0 <= Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x && Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x <= 7){
-                        console.log("hei")
                         if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x] === 0){
-                            this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y)})
-                        } else{
+                            this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y), onPiece: false})
+                        }else if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === 'w' || board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === 'b'){
+                            
+                            if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === this.color){
+                            } else{
+                                this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y), onPiece: true})
+                            }
+                            this.legal_pos[x].stopped = true
+                            this.count += 1
+                        } 
+                        else{
                             
                             this.legal_pos[x].stopped = true
                             this.count += 1
@@ -211,7 +231,7 @@ export class King extends Piece
         this.posibilities = [];
         for(let x = 0;x<this.legal_pos.length;x++){
             if(board[Math.floor(this.pos.y/pieceSize)+1*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+1*this.legal_pos[x].x] === 0){
-                this.posibilities.push({x: Math.floor(this.pos.x/pieceSize)+1*this.legal_pos[x].x, y: Math.floor(this.pos.y/pieceSize)+1*this.legal_pos[x].y})
+                this.posibilities.push({x: Math.floor(this.pos.x/pieceSize)+1*this.legal_pos[x].x, y: Math.floor(this.pos.y/pieceSize)+1*this.legal_pos[x].y, onPiece: false})
             }
         }
     }
@@ -252,9 +272,17 @@ export class Rook extends Piece
                     
                     if(0 <= Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y &&  Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y <= 7 && 0 <= Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x &&Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x <= 7){
                         if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x] === 0){
-                            this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y)})
-                        } else{
+                            this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y), onPiece: false})
+                        } else if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === 'w' || board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === 'b'){
                             
+                            if(board[Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x].color === this.color){
+                            } else{
+                                this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y), onPiece: true})
+                            }
+                            this.legal_pos[x].stopped = true
+                            this.count += 1
+                        } else{
+                            this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+this.change_x*this.legal_pos[x].x), y:(Math.floor(this.pos.y/pieceSize)+this.change_y*this.legal_pos[x].y), onPiece: true})
                             this.legal_pos[x].stopped = true
                             this.count += 1
                         }
