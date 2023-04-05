@@ -39,7 +39,7 @@ export class Pawn extends Piece
             } else{
                 this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-1})
             }
-        }
+        }   
         if(this.color == 'b'){
             if(Math.floor(this.pos.y/pieceSize) === 1 && board[Math.floor(this.pos.y/pieceSize)+2][Math.floor(this.pos.x/pieceSize)] == 0){
                 this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1, onPiece: false})
