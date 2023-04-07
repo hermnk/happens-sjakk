@@ -1,5 +1,6 @@
 :root {
     --visable-hotbar-text: none;
+    --hotbar-text-background: #2C394B;
 }
 
 
@@ -27,14 +28,8 @@ canvas{
     text-align: center;
     color:rgb(4, 116, 186);
     background-color: rgb(8, 32, 50);
-    height: 4rem;
+    height: 3.9rem;
     width: 100%;
-}
-.hotbar-top:hover{
-    --visable-hotbar-text: block;
-}
-.hotbar-top:not(:hover){
-    --visable-hotbar-text: none;
 }
 .show-hotbar-text{
     color: black;
@@ -44,15 +39,23 @@ canvas{
     margin:auto;
 
 }
+.hotbar-top-element{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    column-gap: 3rem;
+}
+.hotbar-top-element:hover{
+    color: white;
+    cursor: pointer;
+}
 #center-text{
     display: grid;
     justify-content: center;
     align-items: center;
 }
 
-.hotbar-top-element{
-    background-color: rgb(8, 32, 50);
-}
 img{
     width: 50px;
     height: 50px;
@@ -64,8 +67,28 @@ img{
 .play-button:hover{
     background-color: rgb(0, 102, 204);
     color: black;
+    cursor: pointer;
 }
-.hotbar-text{
-    display: var(--visable-hotbar-text);
-    height: .2rem;
+.sidebar{
+    display: grid;
+    margin: 3rem;
+    border: solid black;
+    width: 10rem;
+    text-align: center;
+    background-color: rgb(8, 32, 50);
+    color:rgb(4, 116, 186);
+}
+.sidebar-child{
+    margin: 2rem;
+    display: inline-block;
+    border-bottom: solid black ;
+    padding: .5rem;
+    
+    white-space: nowrap;
+
+}
+.sidebar-child:hover{
+    color: white;
+    cursor: pointer;
+    border-bottom:solid rgb(0, 51, 102);
 }

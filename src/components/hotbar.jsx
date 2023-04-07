@@ -16,22 +16,22 @@ class Hotbar extends Component{
             <div className="hotbar-top">
                 <div className="hotbar-top-element">
                     <img src={Theme}/>
-                    <p className="hotbar-text">Themes</p>
+                    <p>Themes</p>
                 </div>
                 <div className="hotbar-top-element">
                     <img src={Puzzle}/>
-                    <p className="hotbar-text">Puzzles</p>
+                    <p>Puzzles</p>
                 </div>
                 <div className="hotbar-top-element play-button">
                     <h1>Play Online</h1>
                 </div>
                 <div className="hotbar-top-element">
                     <img src={Profile}/>
-                    <p className="hotbar-text">Profile</p>
+                    <p>Profile</p>
                 </div>
                 <div className="hotbar-top-element">
                     <img src={Friends}/>
-                    <p className="hotbar-text">Friends</p>
+                    <p>Friends</p>
                 </div>
             </div>
         )
