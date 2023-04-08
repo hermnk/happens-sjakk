@@ -9,13 +9,11 @@ class Sidebar extends Component {
     render(){
         const { menulist } = this.props
         return(
-            <div className="sidebar">
-                {menulist.map((item, index) =>(
+            <div className="sidebar smaller">
+                <h2>{menulist[0].title}</h2>
+                {(menulist[1].categories).map((item, index) =>(
                     <div className="sidebar-child">{item}</div>
                 ))}
-
-
-
             </div>
         )
     }

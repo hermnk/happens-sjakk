@@ -5,13 +5,17 @@ import Sidebar from './components/sidebar'
 
 const App = () =>{
     const profileList = ["Game history", "Rating", "Jeg", "kult"]
-    const playList = ["10 min", "3 min", "1 min"]
+    const playList = [{title: "Game length:"}, {categories: ["10 min", "3 min", "1 min"]}]
 
     return(
-    <div> 
+    <div className="game-page"> 
         <Hotbar/>
-        <Sidebar menulist={playList}/>
-
+        <div className="sidebar-board">
+            <div className="sidebar-scaled">
+                <Sidebar menulist={playList}/>
+            </div>
+            <Board/>
+        </div>
     </div>
     )
 }

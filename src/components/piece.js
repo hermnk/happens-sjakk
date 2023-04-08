@@ -33,20 +33,42 @@ export class Pawn extends Piece
         this.posibilities = [];
 
         if(this.color == 'w'){
-            if(Math.floor(this.pos.y/pieceSize) === 6 && board[Math.floor(this.pos.y/pieceSize)-2][Math.floor(this.pos.x/pieceSize)] == 0){
+            if(Math.floor(this.pos.y/pieceSize) === 6 && board[Math.floor(this.pos.y/pieceSize)-2][Math.floor(this.pos.x/pieceSize)] === 0){
                 this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-1, onPiece: false})
                 this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-2, onPiece: false})
-            } else{
+            } else if(board[Math.floor(this.pos.y/pieceSize)-1][Math.floor(this.pos.x/pieceSize)] === 0){
                 this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)-1})
+            }
+            if(0 <= Math.floor(this.pos.y/pieceSize)-1 && Math.floor(this.pos.y/pieceSize)-1 <= 7 && 0 <= Math.floor(this.pos.x/pieceSize)-1 && Math.floor(this.pos.x/pieceSize)-1 <= 7){
+                if(board[Math.floor(this.pos.y/pieceSize)-1][Math.floor(this.pos.x/pieceSize)-1] !== 0 && board[Math.floor(this.pos.y/pieceSize)-1][Math.floor(this.pos.x/pieceSize)-1].color !== 'w'){
+                    this.posibilities.push({x:Math.floor(this.pos.x/pieceSize)-1, y:Math.floor(this.pos.y/pieceSize)-1, onPiece: true})
+                }
+            }
+            if(0 <= Math.floor(this.pos.y/pieceSize)-1 && Math.floor(this.pos.y/pieceSize)-1 <= 7 && 0 <= Math.floor(this.pos.x/pieceSize)+1 && Math.floor(this.pos.x/pieceSize)+1 <= 7){
+                if(board[Math.floor(this.pos.y/pieceSize)-1][Math.floor(this.pos.x/pieceSize)+1] !== 0 && board[Math.floor(this.pos.y/pieceSize)-1][Math.floor(this.pos.x/pieceSize)+1].color !== 'w'){
+                    this.posibilities.push({x:Math.floor(this.pos.x/pieceSize)+1, y:Math.floor(this.pos.y/pieceSize)-1, onPiece: true})
+                }
             }
         }   
         if(this.color == 'b'){
-            if(Math.floor(this.pos.y/pieceSize) === 1 && board[Math.floor(this.pos.y/pieceSize)+2][Math.floor(this.pos.x/pieceSize)] == 0){
+            if(Math.floor(this.pos.y/pieceSize) === 1 && board[Math.floor(this.pos.y/pieceSize)+2][Math.floor(this.pos.x/pieceSize)] === 0){
                 this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1, onPiece: false})
                 this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+2, onPiece: false})
-            } else{
-                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1, onPiece: false})
+        
+            } else if(board[Math.floor(this.pos.y/pieceSize)+1][Math.floor(this.pos.x/pieceSize)] === 0){
+                this.posibilities.push({x:Math.floor(this.pos.x/pieceSize), y:Math.floor(this.pos.y/pieceSize)+1, onPiece: false })
             }
+            if(0 <= Math.floor(this.pos.y/pieceSize)+1 && Math.floor(this.pos.y/pieceSize)+1 <= 7 && 0 <= Math.floor(this.pos.x/pieceSize)+1 && Math.floor(this.pos.x/pieceSize)+1 <= 7){
+                if(board[Math.floor(this.pos.y/pieceSize)+1][Math.floor(this.pos.x/pieceSize)+1] !== 0 && board[Math.floor(this.pos.y/pieceSize)+1][Math.floor(this.pos.x/pieceSize)+1].color !== 'b'){
+                    this.posibilities.push({x:Math.floor(this.pos.x/pieceSize)+1, y:Math.floor(this.pos.y/pieceSize)+1, onPiece: true })
+                }
+            }
+            if(0 <= Math.floor(this.pos.y/pieceSize)+1 && Math.floor(this.pos.y/pieceSize)+1 <= 7 && 0 <= Math.floor(this.pos.x/pieceSize)-1 && Math.floor(this.pos.x/pieceSize)-1 <= 7){
+                if(board[Math.floor(this.pos.y/pieceSize)+1][Math.floor(this.pos.x/pieceSize)-1] !== 0 && board[Math.floor(this.pos.y/pieceSize)+1][Math.floor(this.pos.x/pieceSize)-1].color !== 'b'){
+                    this.posibilities.push({x:Math.floor(this.pos.x/pieceSize)-1, y:Math.floor(this.pos.y/pieceSize)+1, onPiece: true })
+                }
+            }
+
         }
     }
 }
