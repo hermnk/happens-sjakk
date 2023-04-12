@@ -252,8 +252,14 @@ export class King extends Piece
     {
         this.posibilities = [];
         for(let x = 0;x<this.legal_pos.length;x++){
-            if(board[Math.floor(this.pos.y/pieceSize)+1*this.legal_pos[x].y][Math.floor(this.pos.x/pieceSize)+1*this.legal_pos[x].x] === 0){
-                this.posibilities.push({x: Math.floor(this.pos.x/pieceSize)+1*this.legal_pos[x].x, y: Math.floor(this.pos.y/pieceSize)+1*this.legal_pos[x].y, onPiece: false})
+            if( 0 <= Math.floor(this.pos.y/pieceSize)+(1*this.legal_pos[x].y) && Math.floor(this.pos.y/pieceSize)+(1*this.legal_pos[x].y) <= 7 && 0 <= Math.floor(this.pos.x/pieceSize)+(1*this.legal_pos[x].x) && Math.floor(this.pos.x/pieceSize)+(1*this.legal_pos[x].x) <= 7){
+                if(board[Math.floor(this.pos.y/pieceSize)+(1*this.legal_pos[x].y)][Math.floor(this.pos.x/pieceSize)+(1*this.legal_pos[x].x)] === 0){
+                    this.posibilities.push({x: Math.floor(this.pos.x/pieceSize)+(1*this.legal_pos[x].x), y: Math.floor(this.pos.y/pieceSize)+(1*this.legal_pos[x].y), onPiece: false})
+                }
+                else if(board[Math.floor(this.pos.y/pieceSize)+(1*this.legal_pos[x].y)][Math.floor(this.pos.x/pieceSize)+(1*this.legal_pos[x].x)].color === this.color){
+                } else{
+                    this.posibilities.push({x:(Math.floor(this.pos.x/pieceSize)+(1*this.legal_pos[x].x)), y:(Math.floor(this.pos.y/pieceSize)+(1*this.legal_pos[x].y)), onPiece: true})
+                }
             }
         }
     }
